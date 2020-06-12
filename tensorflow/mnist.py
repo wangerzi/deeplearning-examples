@@ -294,6 +294,8 @@ def train_model_alex(train_images, train_labels, test_images, test_labels, times
     return loss_results, rate_results
 
 
+save_path = 'mnist-result/alex-net.ckpt'
+
 def main():
     start = datetime.datetime.now()
     train_images, train_labels, test_images, test_labels = read_mnist_data('./mnist-data/')
@@ -311,7 +313,7 @@ def main():
     #     plt.show()
 
     start = datetime.datetime.now()
-    loss_result, rate_result = train_model_alex(train_images, train_labels, test_images, test_labels, 7000, 300, save_path)
+    loss_result, rate_result = train_model_alex(train_images, train_labels, test_images, test_labels, 1000, 300, save_path)
     end = datetime.datetime.now()
     print('train times:', (end - start))
     multiple.show_line_graph([
