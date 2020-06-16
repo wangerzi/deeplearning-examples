@@ -2,7 +2,6 @@ import struct
 import time
 
 import numpy as np
-import matplotlib.pyplot as plt
 import random
 from perceptrons import multiple
 import datetime
@@ -110,11 +109,11 @@ def train_model(train_images, train_labels, test_images, test_labels, times=1000
 
     y_ = tf.placeholder(tf.float32, [None, 10])
     cross_entropy = tf.reduce_mean(tf.nn.relu(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y)))
-    train_step = tf.compat.v1.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+    train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
 
     loss_results = []
-    with tf.compat.v1.Session() as sess:
-        tf.compat.v1.global_variables_initializer().run()
+    with tf.Session() as sess:
+        tf.global_variables_initializer().run()
         for i in range(times):
             x_images, y_label = normalization(*get_random_data(train_images, train_labels, batch))
             loss, _ = sess.run([cross_entropy, train_step], {
@@ -196,8 +195,8 @@ def train_model_conv(train_images, train_labels, test_images, test_labels, times
 
     loss_results = []
     rate_results = []
-    with tf.compat.v1.Session() as sess:
-        tf.compat.v1.global_variables_initializer().run()
+    with tf.Session() as sess:
+        tf.global_variables_initializer().run()
         for i in range(times):
             x_images, y_label = normalization(*get_random_data(train_images, train_labels, batch))
             rate, loss, _ = sess.run([accuracy, cross_entropy, train_step], {
@@ -262,7 +261,7 @@ def train_model_alex(train_images, train_labels, test_images, test_labels, times
     y = tf.matmul(h_fc2_drop, W_fc3) + b_fc3
 
     cross_entropy = tf.reduce_mean(
-        tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y)
+        tf.nn.softmax_cross_entropy_with_logits_v2(labels=y_, logits=y)
     )
     train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
     correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
@@ -271,8 +270,8 @@ def train_model_alex(train_images, train_labels, test_images, test_labels, times
     loss_results = []
     rate_results = []
     saver = tf.train.Saver()
-    with tf.compat.v1.Session() as sess:
-        tf.compat.v1.global_variables_initializer().run()
+    with tf.Session() as sess:
+        tf.global_variables_initializer().run()
         for i in range(times):
             x_images, y_label = normalization(*get_random_data(train_images, train_labels, batch))
             rate, loss, _ = sess.run([accuracy, cross_entropy, train_step], {
